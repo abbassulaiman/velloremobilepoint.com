@@ -10,17 +10,21 @@ const { sequelize } = require('./models');
 
 const app = express();
 
+// Trust proxy (required for Render, Heroku, etc.)
+app.set('trust proxy', 1);
+
 // Security
 app.use(helmet());
 
 // CORS — allow multiple origins
-const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:9100').split(',').map(url => url.trim());
+const allowedOrigins = (process.env.FRONTEND_URL || 'https://billing.velloremobilepoint.com,http://localhost:9100').split(',').map(url => url.trim());
 
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.warn(`CORS rejected: ${origin}. Allowed: ${allowedOrigins.join(', ')}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
