@@ -27,6 +27,7 @@ const login = async (req, res) => {
     const token = signToken(user);
     res.json({ token, user: user.toSafeJSON() });
   } catch (err) {
+    console.error('[LOGIN ERROR]', err);
     res.status(500).json({ message: 'Login failed.', error: err.message });
   }
 };
